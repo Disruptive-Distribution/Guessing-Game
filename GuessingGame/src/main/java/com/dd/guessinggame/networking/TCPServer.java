@@ -18,6 +18,10 @@ public class TCPServer {
         this.port = port;
     }
     
+    /**
+     * Bind the port for the server
+     * @return true if the binding was successful, false if not
+     */
     public boolean bind() {
         try {
             this.socket = new ServerSocket(port);
@@ -28,6 +32,9 @@ public class TCPServer {
         return false;
     }
     
+    /**
+     * Handles the connections of the incoming clients
+     */
     public void mainloop() {
         while (true) {
             System.out.println("[*] Waiting for client...");

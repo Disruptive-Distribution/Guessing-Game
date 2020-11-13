@@ -25,10 +25,19 @@ public class Handler {
         this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
     }    
     
+    /**
+     * Send a message to the client/server through socket
+     * @param message Message to be sent
+     */
     public void send(String message) {
         this.out.println(message);
     }
     
+    /**
+     * Read next line from the client/server    
+     * @return Message from the client/server
+     * @throws IOException If the server/client disconnects
+     */
     public String readLine() throws IOException {
         return this.in.readLine();
     }
