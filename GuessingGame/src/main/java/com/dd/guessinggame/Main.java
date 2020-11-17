@@ -114,7 +114,9 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        handleTerminalArguments(args);
+        //handleTerminalArguments(args);
+        //runServer(2000);
+        runClient("localhost",2000);
     }
 
 }

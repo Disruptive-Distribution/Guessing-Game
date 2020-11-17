@@ -13,7 +13,6 @@ public class TCPClient {
     
     private Socket socket;
     private Handler handler;
-
     /**
      * Connect to the server
      * @param ipAddress IP-address of the server
@@ -26,7 +25,7 @@ public class TCPClient {
         this.handler = new Handler(this.socket);
         return true;
     }
- 
+    
     /***
      * This loop is run when the connection between server is established
      */

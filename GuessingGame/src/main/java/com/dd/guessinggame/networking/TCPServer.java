@@ -1,9 +1,9 @@
 package com.dd.guessinggame.networking;
 
-import com.dd.guessinggame.networking.utils.Session;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  *
@@ -11,11 +11,13 @@ import java.net.Socket;
  */
 public class TCPServer {
     
-    private ServerSocket socket;
-    private int port;
+    private ServerSocket socket; //the socet where the client connects to
+    private int port; // the port where the socket listens to, 2000 as default
+    private ArrayList<ClientThread> clients; //list of clients currently connected
 
     public TCPServer(int port) {
         this.port = port;
+        clients = new ArrayList<>();
     }
     
     /**
@@ -31,7 +33,6 @@ public class TCPServer {
         }
         return false;
     }
-    
     /**
      * Handles the connections of the incoming clients
      */
@@ -41,12 +42,24 @@ public class TCPServer {
             try {
                 Socket client = this.socket.accept();
                 // Handle clients here
+                //
+                //create a new thread
+                ClientThread connected = new ClientThread(client);
+                connected.start();
+                //
                 System.out.println("[*] Client accepted!");
-                Session session = new Session(client);
-                session.serve();
+                //Add client to the list
+                clients.add(connected);
+                System.out.println("[*] New client added to the list, now " + clients.size());
             } catch (IOException ex) {
                 System.err.println("[!] Error: " + ex.getMessage());
-            }
+            }        
         }
     }
+    public void messageAllThreads(String msg) {
+        for (ClientThread client : clients) {
+            client.getSession().send(msg);
+        }
+    }
+    
 }
