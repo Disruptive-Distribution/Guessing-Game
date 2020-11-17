@@ -23,6 +23,7 @@ public class ClientThread extends Thread {
     public ClientThread(Socket sock) {
         this.client = sock; 
     }
+    
     public void run() {
         try {
             this.session = new Session(client);
@@ -32,6 +33,14 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Send message to the client
+     * @param message message
+     */
+    public void sendMessage(String message) {
+        this.session.send(message);
+    }
+    
     public Session getSession() {
         return session;
     }

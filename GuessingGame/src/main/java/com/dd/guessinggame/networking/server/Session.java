@@ -53,4 +53,11 @@ public class Session {
             }
         }
         
+        /**
+         * Send message to the client
+         * @param message Message to be sent
+         */
+        public void send(String message) {
+            this.handler.send(message);
+        }
 }

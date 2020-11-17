@@ -21,6 +21,16 @@ public class TCPServer {
     }
     
     /**
+     * Broadcast a message
+     * @param message Message
+     */
+    public void broadcast(String message) {
+        for (ClientThread client: clients) {
+            client.sendMessage(message);
+        }
+    }
+    
+    /**
      * Bind the port for the server
      * @return true if the binding was successful, false if not
      */
