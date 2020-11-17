@@ -13,6 +13,7 @@ public class TCPClient {
     
     private Socket socket;
     private Handler handler;
+
     /**
      * Connect to the server
      * @param ipAddress IP-address of the server
@@ -34,12 +35,10 @@ public class TCPClient {
         String message, output;
         
         // Handle the communication
+        System.out.println("[*] Connected to the server");
         while (true) {
             message = scan.nextLine();
-            
-            if (message.equals("quit")) {
-                break;
-            }
+            if (message.equals("quit")) break;
             
             try {
                 handler.send(message);

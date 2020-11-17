@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dd.guessinggame.networking;
+package com.dd.guessinggame.networking.server;
 
-import com.dd.guessinggame.networking.utils.Session;
+import com.dd.guessinggame.networking.server.TCPServer;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * @author Sade-Tuuli
  */
 public class ClientThread extends Thread {
+    
     private Socket client;
     private Session session;
 
@@ -25,12 +26,12 @@ public class ClientThread extends Thread {
     public void run() {
         try {
             this.session = new Session(client);
+            this.session.serve();
         } catch (IOException ex) {
             Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Ok session!");
-        session.serve();
     }
+
     public Session getSession() {
         return session;
     }

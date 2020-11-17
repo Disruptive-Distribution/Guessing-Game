@@ -1,5 +1,6 @@
-package com.dd.guessinggame.networking.utils;
+package com.dd.guessinggame.networking.server;
 
+import com.dd.guessinggame.networking.utils.Handler;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class Session {
         
         public Session (Socket client) throws IOException {
             this.handler = new Handler(client);
-            this.words = new ArrayList<>();
+            this.words = new ArrayList();
             words.add("a");
             words.add("b");
         }
@@ -31,7 +32,6 @@ public class Session {
             else if (command.equals("start")) {
                 int a = (int) Math.floor(Math.random()*2);
                 handler.send(words.get(a));
-                //handler.send("Starting a game");
             } else {
                 handler.send("hi!");
             }
@@ -52,7 +52,5 @@ public class Session {
                 }
             }
         }
-        public void send(String msg) {
-            handler.send(msg);
-        }
+        
 }
