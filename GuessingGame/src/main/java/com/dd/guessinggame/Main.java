@@ -1,6 +1,7 @@
 package com.dd.guessinggame;
 
-import com.dd.guessinggame.networking.TCPClient;
+import com.dd.guessinggame.networking.client.ClientGUI;
+import com.dd.guessinggame.networking.client.TCPClient;
 import com.dd.guessinggame.networking.server.TCPServer;
 import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
@@ -116,9 +117,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //handleTerminalArguments(args);
-        runServer(2000);
+        // handleTerminalArguments(args);
+        // runServer(2000);
         // runClient("localhost",2000);
+        ClientGUI.main(args);
     }
 
 }
