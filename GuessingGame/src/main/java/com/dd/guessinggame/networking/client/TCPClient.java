@@ -73,6 +73,10 @@ public class TCPClient {
                 handler.send(message);
                 output = handler.readLine();
                 System.out.println("From server: '" + output + "'");
+                //not in use rn, meant for cheacking if ready
+                if(output.equals("starting")) {
+                    handler.send("ready");
+                }
             } catch (IOException ex) {
                 System.err.println("Error" + ex.getMessage());
             }

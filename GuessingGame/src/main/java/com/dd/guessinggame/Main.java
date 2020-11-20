@@ -118,7 +118,7 @@ public class Main {
 
     public static void main(String[] args) {
         // handleTerminalArguments(args);
-        // runServer(2000);
+        //runServer(2000);
         // runClient("localhost",2000);
         ClientGUI.main(args);
     }
