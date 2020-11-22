@@ -21,10 +21,15 @@ public class TCPServer {
     private int port; // the port where the socket listens to, 2000 as default
     public ArrayList<ClientThread> clients; //list of clients currently connected
     public Game game;
+    public String info;
 
     public TCPServer(int port) {
         this.port = port;
         this.clients = new ArrayList();
+        this.info = "Welcome New Player!\rHow to play:\r-Write 'start' to begin a game, you may have to wait for\r the ongoing game to end first"
+                + " (but don't worry you get informed when it's over!)"
+                + "\r-Write the given word faster than other players and get a point"
+                + "\r-Win the most rounds and win the game! \r Good luck!";
     }
     /**
      * Bind the port for the server
@@ -39,6 +44,11 @@ public class TCPServer {
         }
         return false;
     }
+    private void multicast(String msg) {
+            for(ClientThread player : clients) {
+                    player.send(msg);
+                }
+        }
     /**
      * Handles the connections of the incoming clients
      */
@@ -51,15 +61,22 @@ public class TCPServer {
                 ClientThread connected = new ClientThread(client);
                 clients.add(connected);
                 connected.start();
+                connected.send(info);
+                if(game != null) {
+                    connected.send("There's a game going on");
+                }
             } catch (IOException ex) {
                 System.err.println("[!] Error: " + ex.getMessage());
             }        
         }
     }
     public void beginGame() {
-        this.game = new Game(clients);
-        this.game.play(); //I think this blocks everything now, we may need another server thread to run the game
+        ArrayList<ClientThread> currentPlayers = new ArrayList<>();
+        currentPlayers.addAll(clients);
+        this.game = new Game(currentPlayers);
+        this.game.play();
         this.game = null;
+        multicast("Game has ended.");
     }
     //------------------------------------------------------------------------//
     private class ClientThread extends Thread {
@@ -92,24 +109,8 @@ public class TCPServer {
         }
         //method for handling the game calls, should come here if game has started
         public void handleGameMessages(String clientMessage) {
-            if(clientMessage.equals("correct")) {
-                
-            }
+            
         }
-        /*public boolean checkIfReady() {
-            boolean rdy = false;
-            send("starting");
-            try {
-                while(readLine() != null) {
-                    if(readLine().equals("ready")) {
-                        rdy = true;
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return rdy;
-        } */
         
         public void handleCommand(String command) {
             if (command.equals("hello")) {
@@ -124,13 +125,28 @@ public class TCPServer {
             }
             else if (command.equals("ready")) {
                 send("Game is starting!");
-                
             } else {
                 send("hi!");
             }
         }
         private void send(String message) {
             this.out.println(message);
+        }
+        //not in use yet
+        private void sendAndExpect(String message) {
+            this.out.println(message);
+            try {
+                String command = in.readLine();
+                
+                if(command.equals(message)) {
+                    this.out.println("Correct");
+                } else {
+                    this.out.println("");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
         private String readLine() throws IOException {
             return this.in.readLine();
@@ -148,23 +164,26 @@ public class TCPServer {
             words.add("a");
             words.add("b");
         }
-        //at the moment just sends 2 messages to all players
+        //at the moment just sends 7 messages to all players, sleeps 8 sec between
         public void play() {
-            //confirmReadyPlayers();
-            for (int i = 0; i < 2; i++) {
+            confirmReadyPlayers();
+            for (int i = 0; i < 7; i++) {
                 int a = (int) Math.floor(Math.random()*2);
-                multicast(words.get(a));
+                multicastPlayers(words.get(a));
+                try {
+                    Thread.sleep(8000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         //
-        /*private void confirmReadyPlayers() {
-            for(ClientThread player: players) {
-                    if(!player.checkIfReady()) {
-                        players.remove(player);
-                    }
+        private void confirmReadyPlayers() {
+            for(ClientThread player : players) {
+                    player.send("New game starting");
                 }
-        } */
-        private void multicast(String msg) {
+        }
+        private void multicastPlayers(String msg) {
             for(ClientThread player : players) {
                     player.send(msg);
                 }
