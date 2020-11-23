@@ -79,13 +79,7 @@ public class TCPServer {
         HashMap<String, ClientThread> currentPlayers = new HashMap<>();
         currentPlayers.putAll(clients);
         this.game.addPlayers(currentPlayers);
-        try {
-            this.game.start();
-            this.game.join();
-            System.out.println("Ebin end lol");
-        } catch (InterruptedException ex) {
-            Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.game.startSession();
     }
     
     public boolean gameIsRunning() {
@@ -119,7 +113,7 @@ public class TCPServer {
         this.game = game;
     }
     //------------------------------------------------------------------------//
-    public class Game extends Thread {
+    public class Game {
 
         private ArrayList<String> words;
         private HashMap<String, ClientThread> players;
@@ -141,8 +135,7 @@ public class TCPServer {
             return players.containsKey(id);
         }
         //at the moment just sends 7 messages to all players, sleeps 8 sec between
-        @Override
-        public void run() {
+        public void play() {
             confirmReadyPlayers();
             running = true;
             for (int i = 0; i < 4; i++) {
@@ -172,6 +165,25 @@ public class TCPServer {
             for (ClientThread player : players.values()) {
                 player.send(msg);
             }
+        }
+        public void startSession() {
+            GameSession session = new GameSession(game);
+            session.start();
+        }
+        
+        private class GameSession extends Thread {
+            
+            private Game game;
+            
+            public GameSession(Game game) {
+                this.game = game;
+            }
+
+            @Override
+            public void run() {
+                this.game.play();
+            }
+            
         }
     }
 }
