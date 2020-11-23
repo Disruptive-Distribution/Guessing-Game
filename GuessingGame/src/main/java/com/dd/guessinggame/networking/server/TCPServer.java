@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,17 +20,21 @@ public class TCPServer {
     
     private ServerSocket socket; //the socket where the client connects to
     private int port; // the port where the socket listens to, 2000 as default
-    public ArrayList<ClientThread> clients; //list of clients currently connected
+    //public ArrayList<ClientThread> clients; //list of clients currently connected
+    public HashMap<UUID, ClientThread> clients;
     public Game game;
-    public String info;
+    private UUID uid;
+    private String info;
 
     public TCPServer(int port) {
         this.port = port;
-        this.clients = new ArrayList();
+        //this.clients = new ArrayList();
+        this.clients = new HashMap();
         this.info = "Welcome New Player!\rHow to play:\r-Write 'start' to begin a game, you may have to wait for\r the ongoing game to end first"
                 + " (but don't worry you get informed when it's over!)"
                 + "\r-Write the given word faster than other players and get a point"
                 + "\r-Win the most rounds and win the game! \r Good luck!";
+        this.uid = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
     }
     /**
      * Bind the port for the server
@@ -45,7 +50,7 @@ public class TCPServer {
         return false;
     }
     private void multicast(String msg) {
-            for(ClientThread player : clients) {
+            for(ClientThread player : clients.values()) {
                     player.send(msg);
                 }
         }
@@ -59,9 +64,16 @@ public class TCPServer {
                 System.out.println("[*] Client accepted!");
                 //  Add the client to the list
                 ClientThread connected = new ClientThread(client);
-                clients.add(connected);
+                //clients.add(connected);
+                UUID id = uid.randomUUID();
+                while(clients.containsKey(id)) {
+                    id = uid.randomUUID();
+                }
+                clients.put(id, connected);
                 connected.start();
                 connected.send(info);
+                connected.send("Your id: " + id);
+                
                 if(game != null) {
                     connected.send("There's a game going on");
                 }
@@ -71,8 +83,8 @@ public class TCPServer {
         }
     }
     public void beginGame() {
-        ArrayList<ClientThread> currentPlayers = new ArrayList<>();
-        currentPlayers.addAll(clients);
+        HashMap<UUID, ClientThread> currentPlayers = new HashMap<>();
+        currentPlayers.putAll(clients);
         this.game = new Game(currentPlayers);
         this.game.play();
         this.game = null;
@@ -84,12 +96,17 @@ public class TCPServer {
         private PrintWriter out;
         private BufferedReader in;
         private boolean inGame;
+        private UUID ID;
         
         public ClientThread(Socket sock) throws IOException {
             this.client = sock; 
             this.out = new PrintWriter(client.getOutputStream(), true);
             this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            this.ID = null;
             inGame = false;
+        }
+        public void setID(UUID id) {
+            this.ID = id;
         }
 
         public void run() {
@@ -156,9 +173,9 @@ public class TCPServer {
     
     private class Game {
         private ArrayList<String> words;
-        private ArrayList<ClientThread> players;
+        private HashMap<UUID, ClientThread> players;
         
-        public Game(ArrayList<ClientThread> players) {
+        public Game(HashMap<UUID, ClientThread> players) {
             this.players = players;
             this.words = new ArrayList<>();
             words.add("a");
@@ -179,12 +196,12 @@ public class TCPServer {
         }
         //
         private void confirmReadyPlayers() {
-            for(ClientThread player : players) {
+            for(ClientThread player : players.values()) {
                     player.send("New game starting");
                 }
         }
         private void multicastPlayers(String msg) {
-            for(ClientThread player : players) {
+            for(ClientThread player : players.values()) {
                     player.send(msg);
                 }
         }
