@@ -15,7 +15,7 @@ public class Main {
     public static void runServer(int port) {
         TCPServer server = new TCPServer(port);
         boolean running = server.bind();
-        
+
         if (running) {
             System.out.println("[*] Hosting server on localhost:" + port);
             server.mainloop();

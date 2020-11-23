@@ -83,14 +83,15 @@ public class TCPServer {
         this.game.addPlayers(currentPlayers);
         this.game.startSession();
     }
-    
+
     public boolean gameIsRunning() {
         return game != null;
     }
-    
+
     public void stopGame() {
-        
+
     }
+
     public int getPort() {
         return port;
     }
@@ -114,6 +115,7 @@ public class TCPServer {
     public void setGame(Game game) {
         this.game = game;
     }
+
     //------------------------------------------------------------------------//
     public class Game {
 
@@ -123,7 +125,7 @@ public class TCPServer {
         private TCPServer server;
         private boolean running;
         private String current;
-        
+
         public Game(TCPServer server) {
             this.server = server;
             this.running = false;
@@ -132,23 +134,24 @@ public class TCPServer {
             words.add("a");
             words.add("b");
         }
+
         public void addPlayers(HashMap<String, ClientThread> players) {
             this.players = players;
             for (String id : players.keySet()) {
                 points.put(id, 0);
             }
         }
-        
+
         public void reset() {
             this.running = false;
             this.players.clear();
             this.points.clear();
         }
-        
+
         public boolean inGame(String id) {
             return players.containsKey(id);
         }
-        
+
         //at the moment just sends 7 messages to all players, sleeps 8 sec between
         public void play() {
             confirmReadyPlayers();
@@ -165,11 +168,13 @@ public class TCPServer {
             }
             multicastWinner();
             reset();
-            this.server.multicast("The game has ended.");    
+            this.server.multicast("The game has ended.");
         }
+
         public boolean isRunning() {
             return this.running;
         }
+
         private void confirmReadyPlayers() {
             for (ClientThread player : players.values()) {
                 player.send("New game starting");
@@ -181,40 +186,46 @@ public class TCPServer {
                 player.send(msg);
             }
         }
+
         public void startSession() {
             GameSession session = new GameSession(game);
             session.start();
         }
+
         public void guess(String id, String guess) {
-            if(guess.equals(current) && points.keySet().contains(id)) {
-                points.put(id, points.get(id)+1);   
+            if (guess.equals(current) && points.keySet().contains(id)) {
+                points.put(id, points.get(id) + 1);
+                current = null;
             }
         }
+
         public String getWinner() {
             String winner = "";
             int max = 0;
             for (Map.Entry<String, Integer> entry : points.entrySet()) {
-                if(entry.getValue() > max) {
+                if (entry.getValue() > max) {
                     winner = entry.getKey();
                     max = entry.getValue();
                 }
             }
             return winner;
         }
+
         public void multicastWinner() {
             String winner = getWinner();
             for (Map.Entry<String, ClientThread> entry : players.entrySet()) {
-                if(entry.getKey().equals(winner)) {
+                if (entry.getKey().equals(winner)) {
                     entry.getValue().send("You won!");
                 } else {
                     entry.getValue().send("You lost! Better luck next time!");
                 }
             }
         }
+
         private class GameSession extends Thread {
-            
+
             private Game game;
-            
+
             public GameSession(Game game) {
                 this.game = game;
             }
@@ -223,7 +234,7 @@ public class TCPServer {
             public void run() {
                 this.game.play();
             }
-            
+
         }
     }
 }

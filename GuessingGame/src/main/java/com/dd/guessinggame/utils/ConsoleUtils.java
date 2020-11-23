@@ -20,6 +20,7 @@ import org.apache.commons.cli.ParseException;
  * @author Sade-Tuuli
  */
 public class ConsoleUtils {
+
     /**
      * Handle arguments from terminal
      *
@@ -52,7 +53,7 @@ public class ConsoleUtils {
                 formatter.printHelp("GuessingGame", options);
                 System.exit(1);
             }
-            
+
             // Handle server
             if (commands.hasOption("port")) {
                 if (!commands.getOptionValue("port").matches("[0-9]+")) {

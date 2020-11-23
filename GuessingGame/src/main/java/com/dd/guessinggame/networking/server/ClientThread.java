@@ -20,80 +20,80 @@ import java.util.logging.Logger;
  */
 public class ClientThread extends Thread {
 
-        private TCPServer server;
-        private Socket client;
-        private PrintWriter out;
-        private BufferedReader in;
-        private boolean inGame;
-        private String id;
+    private TCPServer server;
+    private Socket client;
+    private PrintWriter out;
+    private BufferedReader in;
+    private boolean inGame;
+    private String id;
 
-        public ClientThread(TCPServer server, Socket sock) throws IOException {
-            this.server = server;
-            this.client = sock;
-            this.out = new PrintWriter(client.getOutputStream(), true);
-            this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            this.id = null;
-            inGame = false;
-        }
+    public ClientThread(TCPServer server, Socket sock) throws IOException {
+        this.server = server;
+        this.client = sock;
+        this.out = new PrintWriter(client.getOutputStream(), true);
+        this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        this.id = null;
+        inGame = false;
+    }
 
-        public void setID(String id) {
-            this.id = id;
-        }
+    public void setID(String id) {
+        this.id = id;
+    }
 
-        public void run() {
-            while (true) {
-                try {
-                    String command = in.readLine();
-                    if (command == null) {
-                        break;
-                    }
-                    this.handleCommand(command);
-                } catch (IOException ex) {
-                    System.out.println("Error: " + ex.getMessage());
-                    break;
-                }
-            }
-        }
-
-        public void handleCommand(String command) {
-            if(!server.game.isRunning()) {
-                if(command.equals("start")) {
-                    server.beginGame();
-                } else {
-                    send("Unknown command.");
-                }
-            } else {
-                if(server.getGame().inGame(id)) {
-                    //handle playing
-                    server.getGame().guess(id, command);
-                } else {
-                    send("Game running, please wait until next round.");
-                }
-            }
-        }
-
-        public void send(String message) {
-            this.out.println(message);
-        }
-
-        //not in use yet
-        public void sendAndExpect(String message) {
-            this.out.println(message);
+    public void run() {
+        while (true) {
             try {
                 String command = in.readLine();
-
-                if (command.equals(message)) {
-                    this.out.println("Correct");
-                } else {
-                    this.out.println("Incorrect");
+                if (command == null) {
+                    break;
                 }
+                this.handleCommand(command);
             } catch (IOException ex) {
-                Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error: " + ex.getMessage());
+                break;
             }
-
-        }
-
-        private String readLine() throws IOException {
-            return this.in.readLine();
         }
     }
+
+    public void handleCommand(String command) {
+        if (!server.game.isRunning()) {
+            if (command.equals("start")) {
+                server.beginGame();
+            } else {
+                send("Unknown command.");
+            }
+        } else {
+            if (server.getGame().inGame(id)) {
+                //handle playing
+                server.getGame().guess(id, command);
+            } else {
+                send("Game running, please wait until next round.");
+            }
+        }
+    }
+
+    public void send(String message) {
+        this.out.println(message);
+    }
+
+    //not in use yet
+    public void sendAndExpect(String message) {
+        this.out.println(message);
+        try {
+            String command = in.readLine();
+
+            if (command.equals(message)) {
+                this.out.println("Correct");
+            } else {
+                this.out.println("Incorrect");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private String readLine() throws IOException {
+        return this.in.readLine();
+    }
+}

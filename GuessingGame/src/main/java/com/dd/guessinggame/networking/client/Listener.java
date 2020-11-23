@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 
 /**
  * Listen to the inputs from the server and write them to the GUI
+ *
  * @author d471061c
  */
 public class Listener extends Thread {
