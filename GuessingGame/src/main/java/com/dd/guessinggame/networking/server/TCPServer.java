@@ -62,7 +62,6 @@ public class TCPServer {
                 System.out.println("[*] Client accepted!");
                 //  Add the client to the list
                 ClientThread connected = new ClientThread(client);
-                //clients.add(connected);
                 UUID id = uid.randomUUID();
                 while(clients.containsKey(id)) {
                     id = uid.randomUUID();
