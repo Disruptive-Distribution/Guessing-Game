@@ -59,23 +59,17 @@ public class ClientThread extends Thread {
             if(!server.game.isRunning()) {
                 if(command.equals("start")) {
                     server.beginGame();
+                } else {
+                    send("Unknown command.");
                 }
             } else {
                 if(server.getGame().inGame(id)) {
                     //handle playing
+                    server.getGame().guess(id, command);
                 } else {
                     send("Game running, please wait until next round.");
                 }
             }
-            /*if (command.equals("start")) {
-                if (!server.gameIsRunning()) {
-                    server.beginGame();
-                } else {
-                    send("Game currently going, please wait till next round.");
-                }
-            } else {
-                send("Invalid command.");
-            } */
         }
 
         public void send(String message) {
