@@ -20,15 +20,13 @@ public class TCPServer {
     
     private ServerSocket socket; //the socket where the client connects to
     private int port; // the port where the socket listens to, 2000 as default
-    //public ArrayList<ClientThread> clients; //list of clients currently connected
-    public HashMap<UUID, ClientThread> clients;
+    public HashMap<UUID, ClientThread> clients; //list of clients currently connected
     public Game game;
     private UUID uid;
     private String info;
 
     public TCPServer(int port) {
         this.port = port;
-        //this.clients = new ArrayList();
         this.clients = new HashMap();
         this.info = "Welcome New Player!\rHow to play:\r-Write 'start' to begin a game, you may have to wait for\r the ongoing game to end first"
                 + " (but don't worry you get informed when it's over!)"
@@ -72,7 +70,6 @@ public class TCPServer {
                 clients.put(id, connected);
                 connected.start();
                 connected.send(info);
-                connected.send("Your id: " + id);
                 
                 if(game != null) {
                     connected.send("There's a game going on");
