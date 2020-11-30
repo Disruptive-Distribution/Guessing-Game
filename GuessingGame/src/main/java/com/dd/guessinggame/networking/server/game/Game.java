@@ -25,6 +25,7 @@ public class Game {
     private TCPServer server;
     private boolean running;
     private String current;
+    private boolean guessed;
 
     public Game(TCPServer server) {
         this.server = server;
@@ -57,11 +58,12 @@ public class Game {
         confirmReadyPlayers();
         running = true;
         for (int i = 0; i < 4; i++) {
+            guessed = false;
             int a = (int) Math.floor(Math.random() * 2);
             this.current = words.get(a);
             multicastPlayers(current);
             try {
-                Thread.sleep(4000);
+                Thread.sleep(5000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -93,9 +95,15 @@ public class Game {
     }
 
     public void guess(String id, String guess) {
-        if (guess.equals(current) && points.keySet().contains(id)) {
+        if (guess.equals(current) && points.keySet().contains(id) && !guessed) {
             points.put(id, points.get(id) + 1);
-            current = null;
+            guessed = true;
+        }
+        if(guess.equals(current)) {
+            players.get(id).send("Correct!");
+        } else {
+            players.get(id).send("Incorrect!");
+            
         }
     }
 

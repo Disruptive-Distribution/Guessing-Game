@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -40,6 +37,7 @@ public class ClientThread extends Thread {
         this.id = id;
     }
 
+    @Override
     public void run() {
         while (true) {
             try {
@@ -74,23 +72,6 @@ public class ClientThread extends Thread {
 
     public void send(String message) {
         this.out.println(message);
-    }
-
-    //not in use yet
-    public void sendAndExpect(String message) {
-        this.out.println(message);
-        try {
-            String command = in.readLine();
-
-            if (command.equals(message)) {
-                this.out.println("Correct");
-            } else {
-                this.out.println("Incorrect");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     private String readLine() throws IOException {
