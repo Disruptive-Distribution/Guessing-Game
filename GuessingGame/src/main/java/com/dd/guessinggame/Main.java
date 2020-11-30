@@ -28,7 +28,7 @@ public class Main {
         // handleTerminalArguments(args);
         //runServer(2000);
         //runClient("localhost",2000);
-        ClientGUI.main(args);
+        ClientGUI.run();
     }
 
 }

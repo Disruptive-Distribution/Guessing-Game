@@ -33,6 +33,10 @@ public class ClientThread extends Thread {
         inGame = false;
     }
 
+    /**
+     * Set identifier for the client
+     * @param id 
+     */
     public void setID(String id) {
         this.id = id;
     }
@@ -53,6 +57,10 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Handle command given from client
+     * @param command Command from the client
+     */
     public void handleCommand(String command) {
         if (!server.game.isRunning()) {
             if (command.equals("start")) {
@@ -70,10 +78,39 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Send message to the server
+     * @param message Message to be sent
+     */
     public void send(String message) {
         this.out.println(message);
     }
 
+    /**
+     * Send message and expect a result
+     * @param message Message to be sent 
+     */
+    public void sendAndExpect(String message) {
+        this.out.println(message);
+        try {
+            String command = in.readLine();
+
+            if (command.equals(message)) {
+                this.out.println("Correct");
+            } else {
+                this.out.println("Incorrect");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    /**
+     * Read line from the input stream
+     * @return String if the reading was successful
+     * @throws IOException If the client disconnects all of the sudden
+     */
     private String readLine() throws IOException {
         return this.in.readLine();
     }

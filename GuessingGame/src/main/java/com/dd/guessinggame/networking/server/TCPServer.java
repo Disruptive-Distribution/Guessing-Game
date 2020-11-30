@@ -74,6 +74,9 @@ public class TCPServer {
         }
     }
 
+    /**
+     * Begin the game
+     */
     public void beginGame() {
         HashMap<String, ClientThread> currentPlayers = new HashMap<>();
         currentPlayers.putAll(clients);
@@ -81,34 +84,65 @@ public class TCPServer {
         this.game.startSession();
     }
 
+    /**
+     * Check if the game is running
+     * @return True if the game is on
+     */
     public boolean gameIsRunning() {
         return game != null;
     }
 
+    /**
+     * Stop the on going game
+     */
     public void stopGame() {
-
+        this.game = null;
     }
 
+    /**
+     * Get port in which the server is running on
+     * @return port number
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * Set port for the server
+     * @param port Port number
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     * Get list of clients
+     * @return List of clients and their ids in hashmap
+     */
     public HashMap<String, ClientThread> getClients() {
         return clients;
     }
 
+    /**
+     * Set client
+     * @param clients 
+     */
     public void setClients(HashMap<String, ClientThread> clients) {
         this.clients = clients;
     }
 
+    /**
+     * Get game from the 
+     * @return 
+     */
     public Game getGame() {
         return game;
     }
 
+    /**
+     * Set game to the server
+     * @param game Game that is played 
+     */
     public void setGame(Game game) {
         this.game = game;
     }
