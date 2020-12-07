@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Game class, handles the playing mechanics and point counting
  * @author Sade-Tuuli
  */
 public class Game {
@@ -66,14 +66,14 @@ public class Game {
     }
 
     /**
-     * Loop that runs the game
+     * Loop that runs the game. 5 characters are sent, with 5 second wait time between them
      */
     public void play() {
         confirmReadyPlayers();
         running = true;
         for (int i = 0; i < 4; i++) {
             guessed = false;
-            int a = (int) Math.floor(Math.random() * 2);
+            int a = (int) Math.floor(Math.random() * words.size());
             this.current = words.get(a);
             multicastPlayers(current);
             try {
