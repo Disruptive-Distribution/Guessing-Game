@@ -1,7 +1,7 @@
 package com.dd.guessinggame;
 
-import com.dd.guessinggame.networking.client.ClientGUI;
-import com.dd.guessinggame.networking.server.TCPServer;
+import com.dd.guessinggame.networking.server.GameServer;
+import com.dd.guessinggame.utils.ConsoleUtils;
 
 public class Main {
 
@@ -13,7 +13,7 @@ public class Main {
      * @param port Port number
      */
     public static void runServer(int port) {
-        TCPServer server = new TCPServer(port);
+        GameServer server = new GameServer(port);
         boolean running = server.bind();
 
         if (running) {
@@ -25,10 +25,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        // handleTerminalArguments(args);
-        //runServer(2000);
-        //runClient("localhost",2000);
-        ClientGUI.run();
+        ConsoleUtils.handleTerminalArguments(args);
     }
 
 }

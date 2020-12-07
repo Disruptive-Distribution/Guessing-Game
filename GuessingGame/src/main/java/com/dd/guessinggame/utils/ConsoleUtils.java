@@ -7,6 +7,7 @@ package com.dd.guessinggame.utils;
 
 import static com.dd.guessinggame.Main.DEFAULT_PORT;
 import static com.dd.guessinggame.Main.runServer;
+import com.dd.guessinggame.networking.client.ClientGUI;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -36,15 +37,14 @@ public class ConsoleUtils {
         // Options
         Options options = new Options();
 
-        // Global options
         Option helpOption = new Option("h", "help", false, "Show this help message ");
-
-        // Server options
         Option portOption = new Option("p", "port", true, "Port for the server, defaults to 2000");
-
+        Option clientOption = new Option("c", "client", false, "Start client");
+        
         options.addOption(helpOption);
         options.addOption(portOption);
-
+        options.addOption(clientOption);
+        
         try {
             CommandLine commands = parser.parse(options, args);
 
@@ -53,18 +53,23 @@ public class ConsoleUtils {
                 formatter.printHelp("GuessingGame", options);
                 System.exit(1);
             }
-
-            // Handle server
-            if (commands.hasOption("port")) {
-                if (!commands.getOptionValue("port").matches("[0-9]+")) {
-                    throw new ParseException("Port must be a number");
-                }
-                int portNumber = Integer.parseInt(commands.getOptionValue("port"));
-                runServer(portNumber);
+            
+            // Handle client
+            if (commands.hasOption("client")) {
+                ClientGUI.run();
             } else {
-                runServer(DEFAULT_PORT);
+                // Handle server
+                if (commands.hasOption("port")) {
+                    if (!commands.getOptionValue("port").matches("[0-9]+")) {
+                        throw new ParseException("Port must be a number");
+                    }
+                    int portNumber = Integer.parseInt(commands.getOptionValue("port"));
+                    runServer(portNumber);
+                } else {
+                    runServer(DEFAULT_PORT);
+                }
             }
-
+            
         } catch (ParseException e) {
             // Display error if there's missing parameters
             // or some parameters don't match.

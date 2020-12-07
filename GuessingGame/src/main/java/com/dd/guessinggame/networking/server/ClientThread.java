@@ -19,14 +19,14 @@ import java.util.logging.Logger;
  */
 public class ClientThread extends Thread {
 
-    private TCPServer server;
+    private GameServer server;
     private Socket client;
     private PrintWriter out;
     private BufferedReader in;
     private boolean inGame;
     private String id;
 
-    public ClientThread(TCPServer server, Socket sock) throws IOException {
+    public ClientThread(GameServer server, Socket sock) throws IOException {
         this.server = server;
         this.client = sock;
         this.out = new PrintWriter(client.getOutputStream(), true);
@@ -103,7 +103,7 @@ public class ClientThread extends Thread {
                 this.out.println("Incorrect");
             }
         } catch (IOException ex) {
-            Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

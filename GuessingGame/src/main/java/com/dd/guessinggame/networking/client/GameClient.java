@@ -11,7 +11,7 @@ import javax.swing.JTextArea;
  *
  * @author d471061c
  */
-public class TCPClient {
+public class GameClient {
 
     private Socket socket;
     private Handler handler;
@@ -22,7 +22,6 @@ public class TCPClient {
      *
      * @param ipAddress IP-address of the server
      * @param port Port number of the server
-     * @return true if the connection was successful, false if not
      * @throws IOException If there was problems in connecting the server
      */
     public void connect(String ipAddress, int port) throws IOException {
@@ -41,9 +40,10 @@ public class TCPClient {
 
     /**
      * Start thread that writes the inputs from the server to the text area in
-     * the GUI. The thread also handles the states of the client if found
-     * necessary.
+     * the GUI.The thread also handles the states of the client if found
+ necessary.
      *
+     * @param textArea JTextArea to write to
      * @throws IOException
      */
     public void start(JTextArea textArea) throws IOException {

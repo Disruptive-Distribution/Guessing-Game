@@ -237,7 +237,7 @@ public class ClientGUI extends javax.swing.JFrame {
     }
 
     // Client settings
-    private TCPClient client = new TCPClient();
+    private GameClient client = new GameClient();
     private boolean connected = false;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

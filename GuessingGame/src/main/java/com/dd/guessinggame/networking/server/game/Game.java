@@ -6,7 +6,7 @@
 package com.dd.guessinggame.networking.server.game;
 
 import com.dd.guessinggame.networking.server.ClientThread;
-import com.dd.guessinggame.networking.server.TCPServer;
+import com.dd.guessinggame.networking.server.GameServer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,12 +22,12 @@ public class Game {
     private ArrayList<String> words;
     private HashMap<String, ClientThread> players;
     private HashMap<String, Integer> points;
-    private TCPServer server;
+    private GameServer server;
     private boolean running;
     private String current;
     private boolean guessed;
 
-    public Game(TCPServer server) {
+    public Game(GameServer server) {
         this.server = server;
         this.running = false;
         this.words = new ArrayList<>();
@@ -65,7 +65,7 @@ public class Game {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         multicastWinner();

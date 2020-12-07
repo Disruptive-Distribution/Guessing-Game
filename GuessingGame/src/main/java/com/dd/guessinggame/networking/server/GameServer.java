@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * @author d471061c
  */
-public class TCPServer {
+public class GameServer {
 
     private ServerSocket socket; //the socket where the client connects to
     private int port; // the port where the socket listens to, 2000 as default
@@ -22,7 +22,7 @@ public class TCPServer {
             + "\r-Write the given word faster than other players and get a point"
             + "\r-Win the most rounds and win the game! \r Good luck!";
 
-    public TCPServer(int port) {
+    public GameServer(int port) {
         this.port = port;
         this.clients = new HashMap();
         this.game = new Game(this);
