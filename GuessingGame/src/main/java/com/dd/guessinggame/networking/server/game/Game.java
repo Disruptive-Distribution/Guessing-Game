@@ -36,6 +36,10 @@ public class Game {
         words.add("b");
     }
 
+    /**
+     * Add a list of players for the game
+     * @param players List of players that will be playing
+     */
     public void addPlayers(HashMap<String, ClientThread> players) {
         this.players = players;
         for (String id : players.keySet()) {
@@ -43,17 +47,27 @@ public class Game {
         }
     }
 
+    /**
+     * Clear all the information regarding the game
+     */
     public void reset() {
         this.running = false;
         this.players.clear();
         this.points.clear();
     }
 
+    /**
+     * Return information if the particular player is in the game or not
+     * @param id player ID
+     * @return
+     */
     public boolean inGame(String id) {
         return players.containsKey(id);
     }
 
-    //at the moment just sends 7 messages to all players, sleeps 8 sec between
+    /**
+     * Loop that runs the game
+     */
     public void play() {
         confirmReadyPlayers();
         running = true;
@@ -73,28 +87,46 @@ public class Game {
         this.server.multicast("The game has ended.");
     }
 
+    /**
+     * Check if there's a game running
+     * @return
+     */
     public boolean isRunning() {
         return this.running;
     }
 
+    /**
+     * Inform the players of a starting game
+     */
     private void confirmReadyPlayers() {
         for (ClientThread player : players.values()) {
             player.send("New game starting");
         }
     }
 
+    /**
+     * Multicast a message to the players
+     */
     private void multicastPlayers(String msg) {
         for (ClientThread player : players.values()) {
             player.send(msg);
         }
     }
 
+    /**
+     * Start a game session
+     */
     public void startSession() {
         GameSession session = new GameSession(this);
         session.start();
     }
 
-    public void guess(String id, String guess) {
+    /**
+     * Handle a guess made by a player
+     * @param id the player ID
+     * @param guess the word that was guessed
+     */
+    public synchronized void guess(String id, String guess) {
         if (guess.equals(current) && points.keySet().contains(id) && !guessed) {
             points.put(id, points.get(id) + 1);
             guessed = true;
@@ -107,6 +139,10 @@ public class Game {
         }
     }
 
+    /**
+     * Check which of the players has the biggest score
+     * @return The ID of the player with the biggest score
+     */
     public String getWinner() {
         String winner = "";
         int max = 0;
@@ -119,6 +155,9 @@ public class Game {
         return winner;
     }
 
+    /**
+     * Tell all the players if they've won or not
+     */
     public void multicastWinner() {
         String winner = getWinner();
         for (Map.Entry<String, ClientThread> entry : players.entrySet()) {

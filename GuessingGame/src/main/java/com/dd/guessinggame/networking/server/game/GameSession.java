@@ -6,7 +6,8 @@
 package com.dd.guessinggame.networking.server.game;
 
 /**
- *
+ * A new thread where the game is run
+ * 
  * @author Sade-Tuuli
  */
 public class GameSession extends Thread {
@@ -17,6 +18,9 @@ public class GameSession extends Thread {
         this.game = game;
     }
 
+    /**
+     * Run the game
+     */
     @Override
     public void run() {
         this.game.play();
