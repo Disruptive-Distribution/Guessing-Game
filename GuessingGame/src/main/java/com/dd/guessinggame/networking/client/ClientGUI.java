@@ -26,7 +26,9 @@ public class ClientGUI extends javax.swing.JFrame {
         this.messageField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if (!connected) return;
+                if (!connected) {
+                    return;
+                }
                 client.sendMessage(messageField.getText());
                 messageField.setText("");
             }
@@ -136,7 +138,8 @@ public class ClientGUI extends javax.swing.JFrame {
 
     /**
      * Connect to the server once the connect button is pressed
-     * @param evt 
+     *
+     * @param evt
      */
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         this.connectToServer();
@@ -149,10 +152,10 @@ public class ClientGUI extends javax.swing.JFrame {
         if (!this.connected) {
             // Validate format
             if (!this.serverField.getText().matches("[^\\:]+:[0-9]+")) {
-                JOptionPane.showMessageDialog(this, "Server must be in format 'ip:port'", "Guessing Game",  JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Server must be in format 'ip:port'", "Guessing Game", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             // Parse IP-address and port
             String content[] = this.serverField.getText().split(":");
             String ipAddress = content[0];
@@ -164,7 +167,7 @@ public class ClientGUI extends javax.swing.JFrame {
                 this.client.start(this.textArea);
                 this.connected = true;
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Guessing Game",  JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Guessing Game", JOptionPane.ERROR_MESSAGE);
                 this.connected = false;
                 return;
             }
@@ -173,13 +176,13 @@ public class ClientGUI extends javax.swing.JFrame {
                 this.client.close();
                 this.connected = false;
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Guessing Game",  JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Guessing Game", JOptionPane.ERROR_MESSAGE);
             }
         }
-        
+
         this.updateMode();
     }
-    
+
     /**
      * Update the GUI when the client is connected and disconnected
      */
@@ -197,11 +200,11 @@ public class ClientGUI extends javax.swing.JFrame {
             this.serverField.setEnabled(true);
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void run() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -234,9 +237,9 @@ public class ClientGUI extends javax.swing.JFrame {
     }
 
     // Client settings
-    private TCPClient client = new TCPClient();
+    private GameClient client = new GameClient();
     private boolean connected = false;
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connectButton;
     private javax.swing.Box.Filler filler1;

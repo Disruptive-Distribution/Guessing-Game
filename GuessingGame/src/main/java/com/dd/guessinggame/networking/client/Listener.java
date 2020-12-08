@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 
 /**
  * Listen to the inputs from the server and write them to the GUI
+ *
  * @author d471061c
  */
 public class Listener extends Thread {
@@ -33,6 +34,7 @@ public class Listener extends Thread {
                 // to the JTextArea. For that reason this is synchronized
                 synchronized (this.area) {
                     this.area.setText(this.area.getText() + output + "\n");
+                    this.area.setCaretPosition(this.area.getDocument().getLength());
                 }
             } catch (IOException ex) {
                 break;
